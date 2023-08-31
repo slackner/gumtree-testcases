@@ -105,7 +105,16 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
     }
 
 
+    @Deprecated
+    @Override
+    public int getCount() {
+        return (int) getBytesWritten();
+    }
 
+    @Override
+    public long getBytesWritten() {
+        return ((CountingOutputStream) out).getBytesWritten();
+    }
 
     /**
      * Ends the TAR archive without closing the underlying OutputStream.
@@ -327,7 +336,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
             numToWrite -= num;
             wOffset += num;
         }
-        count(numToWrite);
     }
 
     /**
