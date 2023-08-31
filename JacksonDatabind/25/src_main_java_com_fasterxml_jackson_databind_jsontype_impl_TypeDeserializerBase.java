@@ -174,7 +174,7 @@ public abstract class TypeDeserializerBase
                      *   important for some reason?
                      *   Disabling the check will break 2 Enum-related tests.
                      */
-                    type = _baseType.narrowBy(type.getRawClass());
+                    type = ctxt.getTypeFactory().constructSpecializedType(_baseType, type.getRawClass());
                 }
                 deser = ctxt.findContextualValueDeserializer(type, _property);
             }
