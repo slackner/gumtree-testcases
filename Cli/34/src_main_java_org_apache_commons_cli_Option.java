@@ -69,7 +69,7 @@ public class Option implements Cloneable, Serializable
     private int numberOfArgs = UNINITIALIZED;
 
     /** the type of this Option */
-    private Class type;
+    private Class type = String.class;
 
     /** the list of argument values **/
     private List values = new ArrayList();

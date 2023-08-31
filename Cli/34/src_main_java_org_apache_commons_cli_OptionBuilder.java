@@ -81,7 +81,7 @@ public final class OptionBuilder
         description = null;
         argName = null;
         longopt = null;
-        type = null;
+        type = String.class;
         required = false;
         numberOfArgs = Option.UNINITIALIZED;
         optionalArg = false;
