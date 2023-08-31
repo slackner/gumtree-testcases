@@ -360,16 +360,10 @@ public class TreeTraversingParser extends ParserMinimalBase
         if (n != null) {
             // [databind#2096]: although `binaryValue()` works for real binary node
             // and embedded "POJO" node, coercion from TextNode may require variant, so:
-            byte[] data = n.binaryValue();
-            if (data != null) {
-                return data;
+            if (n instanceof TextNode) {
+                return ((TextNode) n).getBinaryValue(b64variant);
             }
-            if (n.isPojo()) {
-                Object ob = ((POJONode) n).getPojo();
-                if (ob instanceof byte[]) {
-                    return (byte[]) ob;
-                }
-            }
+            return n.binaryValue();
         }
         // otherwise return null to mark we have no binary content
         return null;
