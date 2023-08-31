@@ -229,6 +229,9 @@ public class ObjectMapper
         {
             // 03-Oct-2016, tatu: As per [databind#1395], need to skip
             //  primitive types too, regardless
+            if (t.isPrimitive()) {
+                return false;
+            }
 
             switch (_appliesFor) {
             case NON_CONCRETE_AND_ARRAYS:
