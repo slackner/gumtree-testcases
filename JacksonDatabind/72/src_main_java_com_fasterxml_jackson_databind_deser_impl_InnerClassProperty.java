@@ -90,6 +90,8 @@ public final class InnerClassProperty
     @Override
     public int getPropertyIndex() { return _delegate.getPropertyIndex(); }
 
+    @Override
+    public int getCreatorIndex() { return _delegate.getCreatorIndex(); }
     
     // // // BeanProperty impl
     
