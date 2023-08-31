@@ -34,10 +34,6 @@ public class BroadcastPingRequest extends BroadcastOperationRequest {
     BroadcastPingRequest() {
     }
 
-    public BroadcastPingRequest(String index) {
-        super(new String[]{index}, null);
-    }
-
     public BroadcastPingRequest(String... indices) {
         super(indices, null);
     }

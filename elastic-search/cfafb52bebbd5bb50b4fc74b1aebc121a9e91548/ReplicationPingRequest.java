@@ -27,10 +27,6 @@ import org.elasticsearch.util.TimeValue;
  */
 public class ReplicationPingRequest extends IndicesReplicationOperationRequest {
 
-    public ReplicationPingRequest(String index) {
-        this(new String[]{index});
-    }
-
     public ReplicationPingRequest(String... indices) {
         this.indices = indices;
     }

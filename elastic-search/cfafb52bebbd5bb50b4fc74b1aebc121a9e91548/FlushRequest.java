@@ -31,10 +31,6 @@ public class FlushRequest extends BroadcastOperationRequest {
 
     }
 
-    public FlushRequest(String index) {
-        this(new String[]{index});
-    }
-
     public FlushRequest(String... indices) {
         super(indices, null);
         // we want to do the refresh in parallel on local shards...
