@@ -244,6 +244,11 @@ class RuntimeTypeCheck implements CompilerPass {
 
       // To satisfy normalization constraints, the type checking must be
       // added after any inner function declarations.
+      for (Node next = block.getFirstChild();
+           next != null && NodeUtil.isFunctionDeclaration(next);
+           next = next.getNext()) {
+        insertionPoint = next;
+      }
 
       for (Node paramType : funType.getParameters()) {
         // Can this ever happen?
