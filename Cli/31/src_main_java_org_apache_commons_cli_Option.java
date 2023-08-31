@@ -54,7 +54,7 @@ public class Option implements Cloneable, Serializable
     private String longOpt;
 
     /** the name of the argument for this option */
-    private String argName = "arg";
+    private String argName;
 
     /** description of the option */
     private String description;
