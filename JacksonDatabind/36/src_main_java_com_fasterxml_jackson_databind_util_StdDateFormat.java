@@ -247,7 +247,15 @@ public class StdDateFormat
      * and not via underlying {@link Calendar} instance like base class
      * does.
      */
+    @Override // since 2.7
+    public void setLenient(boolean enabled) {
+        Boolean newValue = enabled;
+        if (_lenient != newValue) {
+            _lenient = newValue;
             // and since leniency settings may have been used:
+            _clearFormats();
+        }
+    }
 
     @Override // since 2.7
     public boolean isLenient() {
@@ -553,6 +561,9 @@ public class StdDateFormat
             if (tz != null) {
                 df.setTimeZone(tz);
             }
+        }
+        if (lenient != null) {
+            df.setLenient(lenient.booleanValue());
         }
         return df;
     }
