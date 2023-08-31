@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.jxpath.ri.NamespaceResolver;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
@@ -49,12 +50,21 @@ public class JDOMAttributeIterator implements NodeIterator {
                     ns = Namespace.XML_NAMESPACE;
                 }
                 else {
+                    NamespaceResolver nsr = parent.getNamespaceResolver();
+                    if (nsr != null) {
+                        String uri = nsr.getNamespaceURI(prefix);
+                        if (uri != null) {
+                            ns = Namespace.getNamespace(prefix, uri);
+                        }
+                    }
+                    if (ns == null) {
                         ns = element.getNamespace(prefix);
                         if (ns == null) {
                             // TBD: no attributes
                             attributes = Collections.EMPTY_LIST;
                             return;
                         }
+                    }
                 }
             }
             else {
