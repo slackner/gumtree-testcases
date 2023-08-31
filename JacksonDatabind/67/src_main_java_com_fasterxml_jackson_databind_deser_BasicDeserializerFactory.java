@@ -1400,9 +1400,10 @@ public abstract class BasicDeserializerFactory
         // the only non-standard thing is this:
         if (deser == null) {
             if (type.isEnumType()) {
-                return _createEnumKeyDeserializer(ctxt, type);
+                deser = _createEnumKeyDeserializer(ctxt, type);
+            } else {
+                deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);
             }
-            deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);
         }
         // and then post-processing
         if (deser != null) {
