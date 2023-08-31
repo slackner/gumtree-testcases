@@ -79,7 +79,6 @@ class Normalize implements CompilerPass {
   public void process(Node externs, Node root) {
     NodeTraversal.traverse(compiler, root,
         new NormalizeStatements(compiler, assertOnChange));
-    removeDuplicateDeclarations(root);
     if (MAKE_LOCAL_NAMES_UNIQUE) {
       MakeDeclaredNamesUnique renamer = new MakeDeclaredNamesUnique();
       NodeTraversal t = new NodeTraversal(compiler, renamer);
@@ -99,6 +98,7 @@ class Normalize implements CompilerPass {
     //   }
     // otherwise 'var e = 1' would be rewritten as 'e = 1'.
     // TODO(johnlenz): Introduce a seperate scope for catch nodes. 
+    removeDuplicateDeclarations(root);
     new PropogateConstantAnnotations(compiler, assertOnChange)
         .process(externs, root);
   }
