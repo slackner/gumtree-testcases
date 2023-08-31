@@ -85,7 +85,7 @@ public class Metaphone implements StringEncoder {
         }
         // single character is itself
         if (txt.length() == 1) {
-            return txt.toUpperCase() ;
+            return txt.toUpperCase(java.util.Locale.ENGLISH) ;
         }
       
         char[] inwd = txt.toUpperCase(java.util.Locale.ENGLISH).toCharArray() ;

@@ -50,7 +50,7 @@ final class SoundexUtils {
             }
         }
         if (count == len) {
-            return str.toUpperCase();
+            return str.toUpperCase(java.util.Locale.ENGLISH);
         }
         return new String(chars, 0, count).toUpperCase(java.util.Locale.ENGLISH);
     }
