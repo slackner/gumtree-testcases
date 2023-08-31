@@ -60,6 +60,7 @@ public class Scope implements StaticScope<JSType> {
   /** Whether this is a bottom scope for the purposes of type inference. */
   private final boolean isBottom;
 
+  private Var arguments;
 
   /** Stores info about a variable */
   public static class Var implements StaticSlot<JSType> {
@@ -287,10 +288,35 @@ public class Scope implements StaticScope<JSType> {
    * scope.
    */
   // TODO(johnlenz): Include this the list of Vars for the scope.
+  public static class Arguments extends Var {
+    Arguments(Scope scope) {
+      super(
+        false, // no inferred
+        "arguments", // always arguments
+        null,  // no declaration node
         // TODO(johnlenz): provide the type of "Arguments".
+        null,  // no type info
+        scope,
+        -1,    // no variable index
+        null,  // input,
+        false, // not a define
+        null   // no jsdoc
+        );
+    }
 
+    @Override public boolean equals(Object other) {
+      if (!(other instanceof Arguments)) {
+        return false;
+      }
 
+      Arguments otherVar = (Arguments) other;
+      return otherVar.scope.getRootNode() == scope.getRootNode();
+    }
 
+    @Override public int hashCode() {
+      return System.identityHashCode(this);
+    }
+  }
 
   /**
    * Creates a Scope given the parent Scope and the root node of the scope.
@@ -456,6 +482,12 @@ public class Scope implements StaticScope<JSType> {
   /**
    * Get a unique VAR object to represents "arguments" within this scope
    */
+  public Var getArgumentsVar() {
+    if (arguments == null) {
+      arguments = new Arguments(this);
+    }
+    return arguments;
+  }
 
   /**
    * Returns true if a variable is declared.
