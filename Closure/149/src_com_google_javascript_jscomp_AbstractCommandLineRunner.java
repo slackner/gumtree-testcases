@@ -156,6 +156,7 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
     options.setCodingConvention(config.codingConvention);
     options.setSummaryDetailLevel(config.summaryDetailLevel);
 
+    options.outputCharset = getOutputCharset();
     inputCharset = getInputCharset();
 
     if (config.jsOutputFile.length() > 0) {
@@ -515,11 +516,6 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
     Result result;
 
     setRunOptions(options);
-    if (inputCharset == Charsets.UTF_8) {
-      options.outputCharset = Charsets.US_ASCII;
-    } else {
-      options.outputCharset = inputCharset;
-    }
 
     boolean writeOutputToFile = !options.jsOutputFile.isEmpty();
     if (writeOutputToFile) {
@@ -690,6 +686,16 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
    *    be a supported charset.
    * @throws FlagUsageException if flag is not a valid Charset name.
    */
+  private String getOutputCharset() throws FlagUsageException {
+    if (!config.charset.isEmpty()) {
+      if (!Charset.isSupported(config.charset)) {
+        throw new FlagUsageException(config.charset +
+            " is not a valid charset name.");
+      }
+      return config.charset;
+    }
+    return "US-ASCII";
+  }
 
   protected List<JSSourceFile> createExterns() throws FlagUsageException,
       IOException {

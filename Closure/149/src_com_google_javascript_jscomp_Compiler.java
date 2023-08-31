@@ -1359,7 +1359,8 @@ public class Compiler extends AbstractCompiler {
     builder.setSourceMap(sourceMap);
     builder.setSourceMapDetailLevel(options.sourceMapDetailLevel);
 
-    Charset charset = options.outputCharset;
+    Charset charset = options.outputCharset != null ?
+        Charset.forName(options.outputCharset) : null;
     builder.setOutputCharset(charset);
 
     return builder.build();

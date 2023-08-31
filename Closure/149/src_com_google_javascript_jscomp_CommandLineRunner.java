@@ -468,7 +468,6 @@ public class CommandLineRunner extends
     }
 
     options.closurePass = flags.process_closure_primitives;
-    initOptionsFromFlags(options);
     return options;
   }
 
