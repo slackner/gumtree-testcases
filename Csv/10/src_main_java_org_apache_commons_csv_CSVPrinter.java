@@ -67,6 +67,9 @@ public final class CSVPrinter implements Flushable, Closeable {
         this.format.validate();
         // TODO: Is it a good idea to do this here instead of on the first call to a print method?
         // It seems a pain to have to track whether the header has already been printed or not.
+        if (format.getHeader() != null) {
+            this.printRecord((Object[]) format.getHeader());
+        }
     }
 
     // ======================================================
