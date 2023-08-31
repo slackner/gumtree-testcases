@@ -41,6 +41,12 @@ public class PendingAccountsManager {
     pendingAccounts.insert(number, code);
   }
 
+  public void remove(String number) {
+    if (memcachedClient != null)
+      memcachedClient.delete(MEMCACHE_PREFIX + number);
+    pendingAccounts.remove(number);
+  }
+
   public Optional<String> getCodeForNumber(String number) {
     String code = null;
 
