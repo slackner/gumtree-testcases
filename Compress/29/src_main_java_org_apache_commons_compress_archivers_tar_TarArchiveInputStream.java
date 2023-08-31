@@ -76,6 +76,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
     private final ZipEncoding zipEncoding;
 
     // the provided encoding (for unit tests)
+    final String encoding;
 
     /**
      * Constructor for TarInputStream.
@@ -139,6 +140,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
                                  String encoding) {
         this.is = is;
         this.hasHitEOF = false;
+        this.encoding = encoding;
         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
         this.recordSize = recordSize;
         this.blockSize = blockSize;
