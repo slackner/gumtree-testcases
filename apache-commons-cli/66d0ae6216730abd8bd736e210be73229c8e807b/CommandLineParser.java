@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//cli/src/java/org/apache/commons/cli/CommandLineParser.java,v 1.1 2002/06/16 23:00:57 jkeyes Exp $
- * $Revision: 1.1 $
- * $Date: 2002/06/16 23:00:57 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//cli/src/java/org/apache/commons/cli/CommandLineParser.java,v 1.2 2002/07/04 22:32:12 jkeyes Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/07/04 22:32:12 $
  *
  * ====================================================================
  *
@@ -60,8 +60,6 @@
  */
 package org.apache.commons.cli;
 
-import java.util.List;
-
 /**
  * @author John Keyes (jbjk at mac.com)
  */
@@ -69,19 +67,27 @@ public interface CommandLineParser {
     
     /**
      * Parse the arguments according to the specified options.
+     *
      * @param options the specified Options
      * @param arguments the command line arguments
      * @return the list of atomic option and value tokens
+     * @throws ParseException if there are any problems encountered
+     * while parsing the command line tokens.
      */
-    public List parse( Options options, List arguments );
-    
+    public CommandLine parse( Options options, String[] arguments )
+    throws ParseException;
+
     /**
      * Parse the arguments according to the specified options.
+     *
      * @param options the specified Options
      * @param arguments the command line arguments
      * @param stopAtNonOption specifies whether to continue parsing the
      * arguments if a non option is encountered.
      * @return the list of atomic option and value tokens
+     * @throws ParseException if there are any problems encountered
+     * while parsing the command line tokens.
      */
-    public List parse( Options options, List arguments, boolean stopAtNonOption );
+    public CommandLine parse( Options options, String[] arguments, boolean stopAtNonOption )
+    throws ParseException;
 }

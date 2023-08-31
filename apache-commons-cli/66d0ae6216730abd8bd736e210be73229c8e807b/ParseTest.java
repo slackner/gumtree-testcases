@@ -18,6 +18,7 @@ public class ParseTest extends TestCase
 {
 
     private Options _options = null;
+    private CommandLineParser _parser = null;
 
     public static Test suite() { 
         return new TestSuite(ParseTest.class); 
@@ -30,6 +31,9 @@ public class ParseTest extends TestCase
 
     public void setUp()
     {
+        System.setProperty( "org.apache.commons.cli.parser",
+                            "org.apache.commons.cli.PosixParser");
+
         _options = new Options()
             .addOption("a",
                        "enable-a",
@@ -43,29 +47,8 @@ public class ParseTest extends TestCase
                        "copt",
                        false,
                        "turn [c] on or off");
-/*        
-        try
-        {
-            _options
-                .addOption('a',
-                           "enable-a",
-                           false,
-                           "turn [a] on or off")
-                .addOption('b',
-                           "bfile",
-                           true,
-                           "set the value of [b]")
-                .addOption('c',
-                           "copt",
-                           false,
-                           "turn [c] on or off");
-            
-        }
-        catch (CLIException e)
-        {
-            e.printStackTrace();
-        }
-*/
+
+        _parser = CommandLineParserFactory.newParser();
     }
 
     public void tearDown()
@@ -81,7 +64,7 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args);
+            CommandLine cl = _parser.parse(_options, args);
             
             assertTrue( "Confirm -a is set", cl.hasOption("a") );
             assertTrue( "Confirm -b is set", cl.hasOption("b") );
@@ -102,7 +85,7 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args);
+            CommandLine cl = _parser.parse(_options, args);
             
             assertTrue( "Confirm -a is set", cl.hasOption("a") );
             assertTrue( "Confirm -b is set", cl.hasOption("b") );
@@ -122,7 +105,7 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args);
+            CommandLine cl = _parser.parse(_options, args);
             
             assertTrue( "Confirm -a is set", cl.hasOption("a") );
             assertTrue( "Confirm -b is set", cl.hasOption("b") );
@@ -145,7 +128,7 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args);
+            CommandLine cl = _parser.parse(_options, args);
             
             assertTrue( "Confirm -a is set", cl.hasOption("a") );
             assertTrue( "Confirm -b is set", cl.hasOption("b") );
@@ -172,7 +155,7 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args);
+            CommandLine cl = _parser.parse(_options, args);
         }
         catch (MissingArgumentException e)
         {
@@ -194,8 +177,7 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args,
-                                            true);
+            CommandLine cl = _parser.parse(_options, args, true);
             assertTrue( "Confirm -c is set", cl.hasOption("c") );
             assertTrue( "Confirm  2 extra args: " + cl.getArgList().size(), cl.getArgList().size() == 2);
         }
@@ -213,12 +195,11 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args,
-                                            true);
+            CommandLine cl = _parser.parse(_options, args, true);
             assertTrue( "Confirm -c is set", cl.hasOption("c") );
             assertTrue( "Confirm  2 extra args: " + cl.getArgList().size(), cl.getArgList().size() == 2);
 
-            cl = _options.parse( cl.getArgList() );
+            cl = _parser.parse(_options, cl.getArgs() );
 
             assertTrue( "Confirm -c is not set", ! cl.hasOption("c") );
             assertTrue( "Confirm -b is set", cl.hasOption("b") );
@@ -240,12 +221,12 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args,
+            CommandLine cl = _parser.parse(_options,args,
                                             true);
             assertTrue( "Confirm -c is set", cl.hasOption("c") );
             assertTrue( "Confirm  3 extra args: " + cl.getArgList().size(), cl.getArgList().size() == 3);
 
-            cl = _options.parse( cl.getArgList() );
+            cl = _parser.parse(_options, cl.getArgs() );
 
             assertTrue( "Confirm -c is not set", ! cl.hasOption("c") );
             assertTrue( "Confirm -b is set", cl.hasOption("b") );
@@ -267,7 +248,7 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args);
+            CommandLine cl = _parser.parse(_options, args);
 
             assertTrue( "Confirm -c is set", cl.hasOption("c") );
             assertTrue( "Confirm -b is not set", ! cl.hasOption("b") );
@@ -289,7 +270,7 @@ public class ParseTest extends TestCase
 
         try
         {
-            CommandLine cl = _options.parse(args);
+            CommandLine cl = _parser.parse(_options, args);
 
             assertTrue( "Confirm -a is set", cl.hasOption("a") );
             assertTrue( "Confirm -b is set", cl.hasOption("b") );
@@ -303,5 +284,4 @@ public class ParseTest extends TestCase
         }
         
     }
-
 }
