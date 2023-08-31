@@ -81,18 +81,14 @@ public class DOMAttributeIterator implements NodeIterator {
         if (testLocalName.equals("*") || testLocalName.equals(nodeLocalName)) {
             String testPrefix = name.getPrefix();
 
-            if (equalStrings(testPrefix, nodePrefix)) {
+            if (testPrefix == null || equalStrings(testPrefix, nodePrefix)) {
                 return true;
             }
-            String testNS = null;
-            if (testPrefix != null) {
-                testNS = parent.getNamespaceURI(testPrefix);
+            if (nodePrefix == null) {
+                return false;
             }
-            String nodeNS = null;
-            if (nodePrefix != null) {
-                nodeNS = parent.getNamespaceURI(nodePrefix);
-            }
-            return equalStrings(testNS, nodeNS);
+            return equalStrings(parent.getNamespaceURI(testPrefix), parent
+                    .getNamespaceURI(nodePrefix));
         }
         return false;
     }
