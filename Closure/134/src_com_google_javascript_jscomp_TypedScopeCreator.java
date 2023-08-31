@@ -557,9 +557,17 @@ final class TypedScopeCreator implements ScopeCreator {
       JSType propType = ownerType.getPropertyType(propName);
       if (propType instanceof FunctionType) {
         return (FunctionType) propType;
-      }
+      } else {
         // If it's not, then check to see if it's implemented
         // on an implemented interface.
+        for (ObjectType iface :
+                 ownerType.getCtorImplementedInterfaces()) {
+          propType = iface.getPropertyType(propName);
+          if (propType instanceof FunctionType) {
+            return (FunctionType) propType;
+          }
+        }
+      }
 
       return null;
     }

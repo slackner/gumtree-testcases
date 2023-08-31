@@ -207,7 +207,6 @@ class AmbiguateProperties implements CompilerPass {
     for (Property p : propertyMap.values()) {
       if (!p.skipAmbiguating) {
         ++numRenamedPropertyNames;
-        computeRelatedTypes(p.type);
         propsByFreq.add(p);
       } else {
         ++numSkippedPropertyNames;
@@ -353,7 +352,7 @@ class AmbiguateProperties implements CompilerPass {
       if (typesRelatedToSet.intersects(prop.typesSet)) {
         return false;
       }
-      return !getRelated(prop.type).intersects(typesInSet);
+      return !prop.relatedTypesSet.intersects(typesInSet);
     }
 
     /**
@@ -363,7 +362,7 @@ class AmbiguateProperties implements CompilerPass {
      */
     public void addNode(Property prop) {
       typesInSet.or(prop.typesSet);
-      typesRelatedToSet.or(getRelated(prop.type));
+      typesRelatedToSet.or(prop.relatedTypesSet);
     }
 
     /**
@@ -550,11 +549,11 @@ class AmbiguateProperties implements CompilerPass {
   /** Encapsulates the information needed for renaming a property. */
   private class Property {
     final String oldName;
-    JSType type;
     String newName;
     int numOccurrences;
     boolean skipAmbiguating;
     JSTypeBitSet typesSet = new JSTypeBitSet(intForType.size());
+    JSTypeBitSet relatedTypesSet = new JSTypeBitSet(intForType.size());
 
     Property(String name) {
       this.oldName = name;
@@ -591,12 +590,12 @@ class AmbiguateProperties implements CompilerPass {
         return;
       }
 
-      if (type == null) {
-        type = newType;
-      } else {
-        type = type.getLeastSupertype(newType);
+      int typeInt = getIntForType(newType);
+      if (!typesSet.get(typeInt)) {
+        computeRelatedTypes(newType);
+        typesSet.set(typeInt);
+        relatedTypesSet.or(getRelatedTypesOnNonUnion(newType));
       }
-      typesSet.set(getIntForType(newType));
     }
   }
 
