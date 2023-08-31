@@ -133,6 +133,18 @@ public class CollectionLikeType extends TypeBase
                 _valueHandler, _typeHandler, _asStatic);
     }
 
+    @Override
+    public JavaType withHandlersFrom(JavaType src) {
+        JavaType type = super.withHandlersFrom(src);
+        JavaType srcCt = src.getContentType();
+        if (srcCt != null) {
+            JavaType ct = _elementType.withHandlersFrom(srcCt);
+            if (ct != _elementType) {
+                type = type.withContentType(ct);
+            }
+        }
+        return type;
+    }
     
     @Override
     public CollectionLikeType withStaticTyping() {

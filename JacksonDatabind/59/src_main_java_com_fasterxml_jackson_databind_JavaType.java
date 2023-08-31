@@ -137,6 +137,18 @@ public abstract class JavaType
      *
      * @since 2.8.4
      */
+    public JavaType withHandlersFrom(JavaType src) {
+        JavaType type = this;
+        Object h = src.getTypeHandler();
+        if (h != _typeHandler) {
+            type = type.withTypeHandler(h);
+        }
+        h = src.getValueHandler();
+        if (h != _valueHandler) {
+            type = type.withValueHandler(h);
+        }
+        return type;
+    }
 
     /**
      * Mutant factory method that may be called on structured types
