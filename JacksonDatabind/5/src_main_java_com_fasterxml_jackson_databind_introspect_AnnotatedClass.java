@@ -655,7 +655,12 @@ public final class AnnotatedClass
                      */
                 } else {
                     // Well, or, as per [Issue#515], multi-level merge within mixins...
+                    am = mixIns.find(m);
+                    if (am != null) {
+                        _addMixUnders(m, am);
+                    } else {
                         mixIns.add(_constructMethod(m));
+                    }
                 }
             }
         }
