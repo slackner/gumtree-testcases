@@ -16,6 +16,7 @@
  */
 package org.apache.commons.jxpath.ri.compiler;
 
+import org.apache.commons.jxpath.NodeSet;
 import org.apache.commons.jxpath.Pointer;
 import org.apache.commons.jxpath.ri.EvalContext;
 import org.apache.commons.jxpath.ri.model.NodePointer;
@@ -74,6 +75,9 @@ public abstract class Expression {
         if (result instanceof EvalContext) {
             return new ValueIterator((EvalContext) result);
         }
+        if (result instanceof NodeSet) {
+            return new ValueIterator(((NodeSet) result).getPointers().iterator());
+        }
         return ValueUtils.iterate(result);
     }
 
@@ -84,6 +88,11 @@ public abstract class Expression {
         }
         if (result instanceof EvalContext) {
             return (EvalContext) result;
+        }
+        if (result instanceof NodeSet) {
+            return new PointerIterator(((NodeSet) result).getPointers().iterator(),
+                    new QName(null, "value"),
+                    context.getRootContext().getCurrentNodePointer().getLocale());
         }
         return new PointerIterator(ValueUtils.iterate(result),
                 new QName(null, "value"),
