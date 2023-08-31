@@ -299,6 +299,7 @@ public abstract class JavaType
      *
      * @since 2.5
      */
+    public final boolean isJavaLangObject() { return _class == Object.class; }
 
     /**
      * Accessor for checking whether handlers for dealing with values of
