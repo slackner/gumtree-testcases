@@ -90,7 +90,8 @@ public final class FieldProperty
             return this;
         }
         // 07-May-2019, tatu: As per [databind#2303], must keep VD/NVP in-sync if they were
-        return new FieldProperty(this, deser, _nullProvider);
+        NullValueProvider nvp = (_valueDeserializer == _nullProvider) ? deser : _nullProvider;
+        return new FieldProperty(this, deser, nvp);
     }
 
     @Override
