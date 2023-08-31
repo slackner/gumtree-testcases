@@ -132,7 +132,7 @@ public class SimpleType // note: until 2.6 was final
         }
         */
         // 15-Jan-2015, tatu: Not correct; should really re-resolve...
-        return new SimpleType(subclass, _bindings, _superClass, _superInterfaces,
+        return new SimpleType(subclass, _bindings, this, _superInterfaces,
                 _valueHandler, _typeHandler, _asStatic);
     }
     
