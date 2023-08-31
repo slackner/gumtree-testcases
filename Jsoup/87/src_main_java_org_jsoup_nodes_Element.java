@@ -137,6 +137,9 @@ public class Element extends Node {
      * of the tag case preserving setting of the parser.
      * @return
      */
+    public String normalName() {
+        return tag.normalName();
+    }
 
     /**
      * Change the tag of this element. For example, convert a {@code <span>} to a {@code <div>} with
