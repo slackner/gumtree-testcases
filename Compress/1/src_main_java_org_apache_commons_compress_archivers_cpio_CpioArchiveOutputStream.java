@@ -343,6 +343,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
      */
     public void close() throws IOException {
         if (!this.closed) {
+            this.finish();
             super.close();
             this.closed = true;
         }
