@@ -489,7 +489,7 @@ public abstract class JSType implements Serializable {
    * Checks if two types are equivalent.
    */
   public final boolean isEquivalentTo(JSType that) {
-    return checkEquivalenceHelper(that, false);
+    return checkEquivalenceHelper(that, EquivalenceMethod.IDENTITY);
   }
 
   /**
@@ -497,7 +497,7 @@ public abstract class JSType implements Serializable {
    * @see EquivalenceMethod
    */
   public final boolean isInvariant(JSType that) {
-    return checkEquivalenceHelper(that, false);
+    return checkEquivalenceHelper(that, EquivalenceMethod.INVARIANT);
   }
 
   /**
@@ -511,13 +511,13 @@ public abstract class JSType implements Serializable {
    *     unknowns</a>
    */
   public final boolean differsFrom(JSType that) {
-    return !checkEquivalenceHelper(that, true);
+    return !checkEquivalenceHelper(that, EquivalenceMethod.DATA_FLOW);
   }
 
   /**
    * An equivalence visitor.
    */
-  boolean checkEquivalenceHelper(JSType that, boolean tolerateUnknowns) {
+  boolean checkEquivalenceHelper(JSType that, EquivalenceMethod eqMethod) {
     if (this == that) {
       return true;
     }
@@ -525,9 +525,11 @@ public abstract class JSType implements Serializable {
     boolean thisUnknown = isUnknownType();
     boolean thatUnknown = that.isUnknownType();
     if (thisUnknown || thatUnknown) {
-      if (tolerateUnknowns) {
+      if (eqMethod == EquivalenceMethod.INVARIANT) {
         // If we're checking for invariance, the unknown type is invariant
         // with everyone.
+        return true;
+      } else if (eqMethod == EquivalenceMethod.DATA_FLOW) {
         // If we're checking data flow, then two types are the same if they're
         // both unknown.
         return thisUnknown && thatUnknown;
@@ -542,17 +544,17 @@ public abstract class JSType implements Serializable {
 
     if (isUnionType() && that.isUnionType()) {
       return this.toMaybeUnionType().checkUnionEquivalenceHelper(
-          that.toMaybeUnionType(), tolerateUnknowns);
+          that.toMaybeUnionType(), eqMethod);
     }
 
     if (isFunctionType() && that.isFunctionType()) {
       return this.toMaybeFunctionType().checkFunctionEquivalenceHelper(
-          that.toMaybeFunctionType(), tolerateUnknowns);
+          that.toMaybeFunctionType(), eqMethod);
     }
 
     if (isRecordType() && that.isRecordType()) {
       return this.toMaybeRecordType().checkRecordEquivalenceHelper(
-          that.toMaybeRecordType(), tolerateUnknowns);
+          that.toMaybeRecordType(), eqMethod);
     }
 
     ParameterizedType thisParamType = toMaybeParameterizedType();
@@ -562,14 +564,14 @@ public abstract class JSType implements Serializable {
       boolean paramsMatch = false;
       if (thisParamType != null && thatParamType != null) {
         paramsMatch = thisParamType.getParameterType().checkEquivalenceHelper(
-            thatParamType.getParameterType(), tolerateUnknowns);
-      } else if (tolerateUnknowns) {
+            thatParamType.getParameterType(), eqMethod);
+      } else if (eqMethod == EquivalenceMethod.IDENTITY) {
+        paramsMatch = false;
+      } else {
         // If one of the type parameters is unknown, but the other is not,
         // then we consider these the same for the purposes of data flow
         // and invariance.
         paramsMatch = true;
-      } else {
-        paramsMatch = false;
       }
 
       JSType thisRootType = thisParamType == null ?
@@ -577,7 +579,7 @@ public abstract class JSType implements Serializable {
       JSType thatRootType = thatParamType == null ?
           that : thatParamType.getReferencedTypeInternal();
       return paramsMatch &&
-          thisRootType.checkEquivalenceHelper(thatRootType, tolerateUnknowns);
+          thisRootType.checkEquivalenceHelper(thatRootType, eqMethod);
     }
 
     if (isNominalType() && that.isNominalType()) {
@@ -589,13 +591,13 @@ public abstract class JSType implements Serializable {
     if (this instanceof ProxyObjectType) {
       return ((ProxyObjectType) this)
           .getReferencedTypeInternal().checkEquivalenceHelper(
-              that, tolerateUnknowns);
+              that, eqMethod);
     }
 
     if (that instanceof ProxyObjectType) {
       return checkEquivalenceHelper(
           ((ProxyObjectType) that).getReferencedTypeInternal(),
-          tolerateUnknowns);
+          eqMethod);
     }
 
     // Relies on the fact that for the base {@link JSType}, only one
