@@ -1172,7 +1172,7 @@ public class Element extends Node {
 
         Element element = (Element) o;
 
-        return this == o;
+        return tag.equals(element.tag);
     }
 
     @Override
