@@ -205,7 +205,6 @@ class ClosureReverseAbstractInterpreter
       Node param = condition.getLastChild();
       if (callee.getType() == GETPROP && param.isQualifiedName()) {
         JSType paramType =  getTypeIfRefinable(param, blindScope);
-        if (paramType != null) {
         Node left = callee.getFirstChild();
         Node right = callee.getLastChild();
         if (left.getType() == NAME && "goog".equals(left.getString()) &&
@@ -215,7 +214,6 @@ class ClosureReverseAbstractInterpreter
           if (restricter != null) {
             return restrictParameter(param, paramType, blindScope, restricter,
                 outcome);
-            }
           }
         }
       }
