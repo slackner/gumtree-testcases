@@ -359,6 +359,7 @@ class DevirtualizePrototypeMethods implements CompilerPass {
     for (Node child : node.children()) {
       if (NodeUtil.isThis(child)) {
         Node newName = Node.newString(Token.NAME, name);
+        newName.setJSType(child.getJSType());
         node.replaceChild(child, newName);
       } else {
         replaceReferencesToThis(child, name);
