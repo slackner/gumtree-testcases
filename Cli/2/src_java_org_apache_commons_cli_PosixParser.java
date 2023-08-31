@@ -302,7 +302,8 @@ public class PosixParser extends Parser {
             }
             else
             {
-                tokens.add("-" + ch);
+                tokens.add(token);
+                break;
             }
         }
     }
