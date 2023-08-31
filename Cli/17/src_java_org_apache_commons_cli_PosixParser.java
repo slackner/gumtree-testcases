@@ -300,6 +300,7 @@ public class PosixParser extends Parser {
             else if (stopAtNonOption)
             {
                 process(token.substring(i));
+                break;
             }
             else
             {
