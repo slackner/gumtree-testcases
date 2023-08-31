@@ -73,7 +73,13 @@ public abstract class CoreOperationRelationalExpression extends CoreOperation {
             return containsMatch((Iterator) right, left);
         }
         double ld = InfoSetUtil.doubleValue(left);
+        if (Double.isNaN(ld)) {
+            return false;
+        }
         double rd = InfoSetUtil.doubleValue(right);
+        if (Double.isNaN(rd)) {
+            return false;
+        }
         return evaluateCompare(ld == rd ? 0 : ld < rd ? -1 : 1);
     }
 
