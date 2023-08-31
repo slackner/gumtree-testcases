@@ -55,7 +55,7 @@ class ExtendedBufferedReader extends BufferedReader {
     @Override
     public int read() throws IOException {
         int current = super.read();
-        if (current == '\n') {
+        if (current == '\r' || (current == '\n' && lastChar != '\r')) {
             lineCounter++;
         }
         lastChar = current;
