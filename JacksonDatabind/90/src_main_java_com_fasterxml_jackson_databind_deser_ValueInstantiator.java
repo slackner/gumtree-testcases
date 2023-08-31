@@ -69,7 +69,7 @@ public abstract class ValueInstantiator
      */
     public boolean canInstantiate() {
         return canCreateUsingDefault()
-                || canCreateUsingDelegate() 
+                || canCreateUsingDelegate() || canCreateUsingArrayDelegate()
                 || canCreateFromObjectWith() || canCreateFromString()
                 || canCreateFromInt() || canCreateFromLong()
                 || canCreateFromDouble() || canCreateFromBoolean();
