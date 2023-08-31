@@ -22,6 +22,8 @@ package org.elasticsearch.client.transport;
 import org.elasticsearch.ElasticSearchException;
 
 /**
+ * An exception indicating no node is available to perform the operation.
+ *
  * @author kimchy (Shay Banon)
  */
 public class NoNodeAvailableException extends ElasticSearchException {
