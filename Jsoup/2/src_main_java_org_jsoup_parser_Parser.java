@@ -145,6 +145,7 @@ public class Parser {
         if (tag.isData()) {
             String data = tq.chompTo("</" + tagName);
             tq.chompTo(">");
+            popStackToClose(tag);
             
             Node dataNode;
             if (tag.equals(titleTag) || tag.equals(textareaTag)) // want to show as text, but not contain inside tags (so not a data tag?)
