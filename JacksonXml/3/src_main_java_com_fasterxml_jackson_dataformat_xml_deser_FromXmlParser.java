@@ -666,9 +666,8 @@ public class FromXmlParser
             }
             break;
         case XmlTokenStream.XML_ATTRIBUTE_VALUE:
-            _currText = _xmlTokens.getText();
             _currToken = JsonToken.VALUE_STRING;
-            break;
+            return (_currText = _xmlTokens.getText());
         case XmlTokenStream.XML_TEXT:
             _currText = _xmlTokens.getText();
             if (_mayBeLeaf) {
