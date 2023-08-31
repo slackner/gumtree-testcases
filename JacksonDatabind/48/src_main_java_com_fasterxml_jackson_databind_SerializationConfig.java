@@ -862,6 +862,12 @@ public final class SerializationConfig
     {
         VisibilityChecker<?> vchecker = super.getDefaultVisibilityChecker();
         // then global overrides (disabling)
+        if (!isEnabled(MapperFeature.AUTO_DETECT_SETTERS)) {
+            vchecker = vchecker.withSetterVisibility(Visibility.NONE);
+        }
+        if (!isEnabled(MapperFeature.AUTO_DETECT_CREATORS)) {
+            vchecker = vchecker.withCreatorVisibility(Visibility.NONE);
+        }
         if (!isEnabled(MapperFeature.AUTO_DETECT_GETTERS)) {
             vchecker = vchecker.withGetterVisibility(Visibility.NONE);
         }
