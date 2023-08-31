@@ -155,6 +155,9 @@ public class Rule {
          * @param lang the language set to merge
          * @return a new Phoneme
          */
+        public Phoneme mergeWithLanguage(final LanguageSet lang) {
+          return new Phoneme(this.phonemeText.toString(), this.languages.merge(lang));
+        }
 
         @Override
         public String toString() {
