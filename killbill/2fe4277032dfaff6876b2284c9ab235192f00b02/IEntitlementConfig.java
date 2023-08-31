@@ -18,7 +18,7 @@ package com.ning.billing.entitlement.glue;
 
 import org.skife.config.Config;
 
-public interface IEngineConfig {
+public interface IEntitlementConfig {
 
     @Config("killbill.entitlement.dao.claim.time")
     public long getDaoClaimTimeMs();

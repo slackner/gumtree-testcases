@@ -16,8 +16,7 @@
 
 package com.ning.billing.catalog.api;
 
-public interface IProductType {
-
-	public abstract String getName();
-
+public enum PlanAlignmentCreate {
+	START_OF_BUNDLE,
+	START_OF_SUBSCRIPTION,
 }

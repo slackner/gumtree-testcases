@@ -16,7 +16,7 @@
 
 package com.ning.billing.catalog.api;
 
-public enum PlanAlignment {
+public enum PlanAlignmentChange {
 	START_OF_BUNDLE,
 	START_OF_SUBSCRIPTION,
 	CHANGE_OF_PLAN,
