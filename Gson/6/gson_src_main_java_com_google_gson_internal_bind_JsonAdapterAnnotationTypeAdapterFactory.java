@@ -64,7 +64,9 @@ public final class JsonAdapterAnnotationTypeAdapterFactory implements TypeAdapte
       throw new IllegalArgumentException(
           "@JsonAdapter value must be TypeAdapter or TypeAdapterFactory reference.");
     }
+    if (typeAdapter != null) {
       typeAdapter = typeAdapter.nullSafe();
+    }
     return typeAdapter;
   }
 }
