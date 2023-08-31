@@ -259,9 +259,13 @@ public final class JsonTreeReader extends JsonReader {
       pathNames[stackSize - 2] = "null";
     } else {
       popStack();
+      if (stackSize > 0) {
         pathNames[stackSize - 1] = "null";
+      }
     }
+    if (stackSize > 0) {
       pathIndices[stackSize - 1]++;
+    }
   }
 
   @Override public String toString() {
