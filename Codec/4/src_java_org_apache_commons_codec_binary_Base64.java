@@ -222,7 +222,7 @@ public class Base64 implements BinaryEncoder, BinaryDecoder {
      * </p>
      */
     public Base64() {
-        this(false);
+        this(0);
     }
 
     /**
