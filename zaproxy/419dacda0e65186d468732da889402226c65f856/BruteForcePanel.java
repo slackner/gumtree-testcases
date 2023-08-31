@@ -56,8 +56,10 @@ import org.parosproxy.paros.model.HistoryReference;
 import org.parosproxy.paros.model.SiteNode;
 import org.parosproxy.paros.network.HttpMessage;
 import org.parosproxy.paros.view.HttpPanel;
+import org.parosproxy.paros.view.View;
 import org.zaproxy.zap.utils.FilenameExtensionFilter;
 import org.zaproxy.zap.utils.SortedComboBoxModel;
+import org.zaproxy.zap.view.ScanStatus;
 
 import com.sittinglittleduck.DirBuster.BaseCase;
 /**
@@ -101,6 +103,8 @@ public class BruteForcePanel extends AbstractPanel implements BruteForceListenne
 	private HttpPanel requestPanel = null;
 	private HttpPanel responsePanel = null;
 
+	private ScanStatus scanStatus = null;
+
     private static Log log = LogFactory.getLog(BruteForcePanel.class);
     
     /**
@@ -126,6 +130,13 @@ public class BruteForcePanel extends AbstractPanel implements BruteForceListenne
 		//TODO: Find a hammer icon :)
 		this.setIcon(new ImageIcon(getClass().getResource("/resource/icon/16/086.png")));	// 'spanner' icon
         this.add(getPanelCommand(), getPanelCommand().getName());
+        
+        // Wont need to do this if/when this class is changed to extend ScanPanel
+        scanStatus = new ScanStatus(new ImageIcon(getClass().getResource("/resource/icon/16/086.png")), 
+        		Constant.messages.getString("bruteforce.panel.title"));
+        View.getSingleton().getMainFrame().addFooterLabel(scanStatus.getCountLabel());
+        View.getSingleton().getMainFrame().addFooterLabel(new JLabel("<html>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</html>"));
+
 	}
 	/**
 
@@ -299,6 +310,8 @@ public class BruteForcePanel extends AbstractPanel implements BruteForceListenne
 		sb.append("</html>");
 		getActiveScansNameLabel().setToolTipText(sb.toString());
 		getActiveScansValueLabel().setToolTipText(sb.toString());
+		
+		scanStatus.setScanCount(activeScans.size());
 	}
 	
 	private JProgressBar getProgressBar() {
@@ -415,10 +428,8 @@ public class BruteForcePanel extends AbstractPanel implements BruteForceListenne
 			System.out.println("Exit value=" + proc.waitFor());
 			//System.out.println("Exit value=" + proc.exitValue());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -569,7 +580,7 @@ public class BruteForcePanel extends AbstractPanel implements BruteForceListenne
 				if (! f.exists()) {
 					log.error("No such file: " + f.getAbsolutePath());
 				} else {
-					bruteForce = new BruteForce(site, fileName, this, this.bruteForceParam);
+					bruteForce = new BruteForce(site, fileName, this, this.bruteForceParam, null);
 					bruteForceMap.put(site, bruteForce);
 				}
 			}
@@ -600,7 +611,7 @@ public class BruteForcePanel extends AbstractPanel implements BruteForceListenne
 		}
 	}
 
-	public void nodeSelected(SiteNode node) {
+	protected String getSiteName(SiteNode node) {
 		if (node != null) {
 			while (node.getParent() != null && node.getParent().getParent() != null) {
 				node = (SiteNode) node.getParent();
@@ -609,15 +620,42 @@ public class BruteForcePanel extends AbstractPanel implements BruteForceListenne
 			if (site.indexOf("//") >= 0) {
 				site = site.substring(site.indexOf("//") + 2);
 			}
-			if (site.indexOf(":") >= 0) {
-				site = site.substring(0, site.indexOf(":"));
+			return site;
+		}
+		return null;
+	}
+
+	public void nodeSelected(SiteNode node) {
+		siteSelected(getSiteName(node));
+	}
+	
+
+	protected void bruteForceSite(SiteNode node) {
+		this.setTabFocus();
+		nodeSelected(node);
+		if (currentSite != null && this.getStartScanButton().isEnabled()) {
+			startScan();
+		}
+	}
+
+	protected void bruteForceDirectory(SiteNode node) {
+		this.setTabFocus();
+		nodeSelected(node);
+		if (currentSite != null && this.getStartScanButton().isEnabled()) {
+			try {
+				String dir = node.getHistoryReference().getHttpMessage().getRequestHeader().getURI().getPath();
+				startScan(dir);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			siteSelected(site);
-			
 		}
 	}
 
 	private void startScan() {
+		this.startScan(null);
+	}
+	
+	private void startScan(String directory) {
 			
 		this.getStartScanButton().setEnabled(false);
 		this.getStopScanButton().setEnabled(true);
@@ -632,7 +670,7 @@ public class BruteForcePanel extends AbstractPanel implements BruteForceListenne
 			log.error("No such file: " + f.getAbsolutePath());
 			return;
 		}
-		BruteForce bruteForce = new BruteForce(currentSite, f.getAbsolutePath(), this, bruteForceParam);
+		BruteForce bruteForce = new BruteForce(currentSite, f.getAbsolutePath(), this, bruteForceParam, directory);
 		bruteForceMap.put(currentSite, bruteForce);
 		
 		bruteForce.start();
@@ -746,5 +784,16 @@ public class BruteForcePanel extends AbstractPanel implements BruteForceListenne
         this.responsePanel = responsePanel;
 
     }
-    
+
+	public boolean isScanning(SiteNode node) {
+		String site = getSiteFromLabel(this.getSiteName(node));
+		if (site != null) {
+			BruteForce bf = bruteForceMap.get(site);
+			if (bf != null) {
+				return bf.isAlive();
+			}
+		}
+		return false;
+	}
+
 }
