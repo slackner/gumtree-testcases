@@ -20,7 +20,6 @@ import com.google.common.base.Preconditions;
 import com.google.javascript.rhino.JSDocInfo;
 import com.google.javascript.rhino.Node;
 import com.google.javascript.rhino.Token;
-import com.google.javascript.rhino.jstype.JSType;
 
 
 /**
@@ -92,7 +91,7 @@ class SyntacticScopeCreator implements ScopeCreator {
       // been declared in the outer scope.
       String fnName = fnNameNode.getString();
       if (!fnName.isEmpty() && NodeUtil.isFunctionExpression(n)) {
-        declareVar(fnName, fnNameNode, n, null, null, n);
+        declareVar(fnNameNode);
       }
 
       // Args: Declare function variables
@@ -100,7 +99,7 @@ class SyntacticScopeCreator implements ScopeCreator {
       for (Node a = args.getFirstChild(); a != null;
            a = a.getNext()) {
         Preconditions.checkState(a.getType() == Token.NAME);
-        declareVar(a.getString(), a, args, n, null, n);
+        declareVar(a);
       }
 
       // Body
@@ -122,9 +121,7 @@ class SyntacticScopeCreator implements ScopeCreator {
         for (Node child = n.getFirstChild();
              child != null;) {
           Node next = child.getNext();
-          Preconditions.checkState(child.getType() == Token.NAME);
-          String name = child.getString();
-          declareVar(name, child, n, parent, null, n);
+          declareVar(child);
           child = next;
         }
         return;
@@ -139,7 +136,7 @@ class SyntacticScopeCreator implements ScopeCreator {
           // This is invalid, but allow it so the checks can catch it.
           return;
         }
-        declareVar(fnName, n.getFirstChild(), n, parent, null, n);
+        declareVar(n.getFirstChild());
         return;   // should not examine function's children
 
       case Token.CATCH:
@@ -151,7 +148,7 @@ class SyntacticScopeCreator implements ScopeCreator {
         final Node var = n.getFirstChild();
         final Node block = var.getNext();
 
-        declareVar(var.getString(), var, n, parent, null, n);
+        declareVar(var);
         scanVars(block, n);
         return;  // only one child to scan
 
@@ -177,8 +174,7 @@ class SyntacticScopeCreator implements ScopeCreator {
    */
   interface RedeclarationHandler {
     void onRedeclaration(
-        Scope s, String name,
-        Node n, Node parent, Node gramps, Node nodeWithLineNumber);
+        Scope s, String name, Node n, CompilerInput input);
   }
 
   /**
@@ -186,8 +182,8 @@ class SyntacticScopeCreator implements ScopeCreator {
    */
   private class DefaultRedeclarationHandler implements RedeclarationHandler {
     public void onRedeclaration(
-        Scope s, String name,
-        Node n, Node parent, Node gramps, Node nodeWithLineNumber) {
+        Scope s, String name, Node n, CompilerInput input) {
+      Node parent = n.getParent();
 
       // Don't allow multiple variables to be declared at the top level scope
       if (scope.isGlobal()) {
@@ -232,16 +228,17 @@ class SyntacticScopeCreator implements ScopeCreator {
    * @param n The node corresponding to the variable name.
    * @param declaredType The variable's type, according to JSDoc
    */
-  private void declareVar(String name, Node n, Node parent,
-                          Node gramps, JSType declaredType,
-                          Node nodeWithLineNumber) {
+  private void declareVar(Node n) {
+    Preconditions.checkState(n.getType() == Token.NAME);
 
+    CompilerInput input = compiler.getInput(sourceName);
+    String name = n.getString();
     if (scope.isDeclared(name, false)
         || (scope.isLocal() && name.equals(ARGUMENTS))) {
       redeclarationHandler.onRedeclaration(
-          scope, name, n, parent, gramps, nodeWithLineNumber);
+          scope, name, n, input);
     } else {
-      scope.declare(name, n, declaredType, compiler.getInput(sourceName));
+      scope.declare(name, n, null, input);
     }
   }
 }
