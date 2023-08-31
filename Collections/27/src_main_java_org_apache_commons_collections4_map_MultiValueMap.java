@@ -565,6 +565,13 @@ public class MultiValueMap<K, V> extends AbstractMapDecorator<K, Object> impleme
             }
         }
 
+        private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
+            is.defaultReadObject();
+            // ensure that the de-serialized class is a Collection, COLLECTIONS-580
+            if (clazz != null && !Collection.class.isAssignableFrom(clazz)) {
+                throw new UnsupportedOperationException();
+            }
+        }
     }
 
 }
