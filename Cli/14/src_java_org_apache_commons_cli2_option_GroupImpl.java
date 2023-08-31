@@ -247,9 +247,6 @@ public class GroupImpl
 
             // needs validation?
             boolean validate = option.isRequired() || option instanceof Group;
-            if (validate) {
-                option.validate(commandLine);
-            }
 
             // if the child option is present then validate it
             if (commandLine.hasOption(option)) {
@@ -258,7 +255,10 @@ public class GroupImpl
 
                     break;
                 }
+                validate = true;
+            }
 
+            if (validate) {
                 option.validate(commandLine);
             }
         }
