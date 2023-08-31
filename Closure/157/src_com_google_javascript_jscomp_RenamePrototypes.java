@@ -333,7 +333,7 @@ class RenamePrototypes implements CompilerPass {
                  child != null;
                  child = child.getNext()) {
 
-              if (child.getType() != Token.NUMBER) {
+              if (TokenStream.isJSIdentifier(child.getString())) {
                 markObjLitPropertyCandidate(child, t.getInput());
               }
             }
@@ -374,7 +374,7 @@ class RenamePrototypes implements CompilerPass {
 
             for (Node key = map.getFirstChild();
                  key != null; key = key.getNext()) {
-              if (key.getType() != Token.NUMBER) {
+              if (TokenStream.isJSIdentifier(key.getString())) {
                // May be STRING, GET, or SET
                 markPrototypePropertyCandidate(key, input);
               }
