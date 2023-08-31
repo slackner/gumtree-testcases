@@ -105,7 +105,8 @@ public class DOMNodePointer extends NodePointer {
                 || testName.getName()
                         .equals(DOMNodePointer.getLocalName(node))) {
                 String nodeNS = DOMNodePointer.getNamespaceURI(node);
-                return equalStrings(namespaceURI, nodeNS);
+                return equalStrings(namespaceURI, nodeNS) || nodeNS == null
+                        && equalStrings(testPrefix, getPrefix(node));
             }
             return false;
         }
