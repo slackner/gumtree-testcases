@@ -1666,6 +1666,9 @@ final class TypedScopeCreator implements ScopeCreator {
       }
 
       // Prototype sets are always declared.
+      if (qName != null && qName.endsWith(".prototype")) {
+        return false;
+      }
 
       boolean inferred = true;
       if (info != null) {
