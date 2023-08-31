@@ -177,7 +177,7 @@ public class ObjectMapper
                 return (t.getRawClass() == Object.class)
                         || (!t.isConcrete()
                                 // [databind#88] Should not apply to JSON tree models:
-                        || TreeNode.class.isAssignableFrom(t.getRawClass()));
+                                && !TreeNode.class.isAssignableFrom(t.getRawClass()));
 
             case NON_FINAL:
                 while (t.isArrayType()) {
