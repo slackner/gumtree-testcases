@@ -523,7 +523,7 @@ public abstract class StdDeserializer<T>
         } catch (IllegalArgumentException iae) {
             return (java.util.Date) ctxt.handleWeirdStringValue(_valueClass, value,
                     "not a valid representation (error: %s)",
-                    iae.getMessage());
+                    ClassUtil.exceptionMessage(iae));
         }
     }
 

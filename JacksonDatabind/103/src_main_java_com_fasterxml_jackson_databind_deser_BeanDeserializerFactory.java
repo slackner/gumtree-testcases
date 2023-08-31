@@ -219,7 +219,7 @@ public class BeanDeserializerFactory
             //   to throw proper exception, it doesn't actually have reference to this
             //   instance so...
             throw InvalidDefinitionException.from(ctxt.getParser(),
-                    e.getMessage(),
+                    ClassUtil.exceptionMessage(e),
                     beanDesc, null);
         }
         BeanDeserializerBuilder builder = constructBeanDeserializerBuilder(ctxt, beanDesc);
@@ -278,7 +278,7 @@ public class BeanDeserializerFactory
             //   to throw proper exception, it doesn't actually have reference to this
             //   instance so...
             throw InvalidDefinitionException.from(ctxt.getParser(),
-                    e.getMessage(),
+                    ClassUtil.exceptionMessage(e),
                     builderDesc, null);
         }
         final DeserializationConfig config = ctxt.getConfig();
