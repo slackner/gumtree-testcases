@@ -61,6 +61,9 @@ abstract class CombiningEvaluator extends Evaluator {
                 this.evaluators.addAll(evaluators);
         }
 
+        Or() {
+            super();
+        }
 
         public void add(Evaluator e) {
             evaluators.add(e);
