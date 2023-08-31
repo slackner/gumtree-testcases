@@ -44,6 +44,7 @@ public interface WriteableCommandLine extends CommandLine {
      * @param option the Option associated with the values
      * @return a list of values or an empty List if none are found
      */
+    List getUndefaultedValues(final Option option);
 
     /**
      * Sets the default values for an Option in the CommandLine
