@@ -609,7 +609,7 @@ public abstract class BeanDeserializerBase
         if (extTypes != null) {
             // 21-Jun-2016, tatu: related to [databind#999], may need to link type ids too,
             //    so need to pass collected properties
-            _externalTypeIdHandler = extTypes.build();
+            _externalTypeIdHandler = extTypes.build(_beanProperties);
             // we consider this non-standard, to offline handling
             _nonStandardCreation = true;
         }
