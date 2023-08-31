@@ -125,6 +125,7 @@ public class ChangeSetPerformer {
                 results.addedFromChangeSet(change.getEntry().getName());
             }
         }
+        out.finish();
         return results;
     }
 
