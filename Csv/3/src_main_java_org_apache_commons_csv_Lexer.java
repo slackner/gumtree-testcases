@@ -108,8 +108,11 @@ abstract class Lexer {
             throw new IOException("EOF whilst processing escape sequence");
         default:
             // Now check for meta-characters
+            if (isDelimiter(c) || isEscape(c) || isQuoteChar(c) || isCommentStart(c)) {
                 return c;
+            }
             // indicate unexpected char - available from in.getLastChar()
+            return END_OF_STREAM;
         }
     }
 
