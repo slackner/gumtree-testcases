@@ -1165,6 +1165,8 @@ public final class JsDocInfoParser {
         case EOF:
           // When we're capturing a license block, annotations
           // in the block are ok.
+          if (!(option == WhitespaceOption.PRESERVE &&
+                token == JsDocToken.ANNOTATION)) {
             String multilineText = builder.toString();
 
             if (option != WhitespaceOption.PRESERVE) {
@@ -1180,6 +1182,7 @@ public final class JsDocInfoParser {
             }
 
             return new ExtractionInfo(multilineText, token);
+          }
 
           // FALL THROUGH
 
