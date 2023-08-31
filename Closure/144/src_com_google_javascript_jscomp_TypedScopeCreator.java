@@ -574,6 +574,7 @@ final class TypedScopeCreator implements ScopeCreator {
       Node fnRoot = isFnLiteral ? rValue : null;
       Node parametersNode = isFnLiteral ?
           rValue.getFirstChild().getNext() : null;
+      Node fnBlock = isFnLiteral ? parametersNode.getNext() : null;
 
       if (functionType == null && info != null && info.hasType()) {
         JSType type = info.getType().evaluate(scope, typeRegistry);
@@ -614,6 +615,7 @@ final class TypedScopeCreator implements ScopeCreator {
                     .setSourceNode(fnRoot)
                     .inferFromOverriddenFunction(propType, parametersNode)
                     .inferThisType(info, owner)
+                    .inferReturnStatements(fnBlock)
                     .buildAndRegister();
               }
             }
@@ -631,6 +633,7 @@ final class TypedScopeCreator implements ScopeCreator {
             .inferInheritance(info)
             .inferThisType(info, owner)
             .inferParameterTypes(parametersNode, info)
+            .inferReturnStatements(fnBlock)
             .buildAndRegister();
       }
 

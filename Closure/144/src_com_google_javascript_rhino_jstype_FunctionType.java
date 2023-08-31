@@ -514,7 +514,7 @@ public class FunctionType extends PrototypeObjectType {
 
   FunctionType cloneWithNewReturnType(JSType newReturnType, boolean inferred) {
     return new FunctionType(
-        registry, null, null,
+        registry, null, source,
         new ArrowType(
             registry, call.parameters, newReturnType, inferred),
         typeOfThis, null, false, false);
