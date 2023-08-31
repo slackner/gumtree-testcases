@@ -32,6 +32,7 @@ public interface UnixStat {
      * Bits used to indicate the filesystem object type.
      * @since 1.14
      */
+    int FILE_TYPE_FLAG = 0170000;
     /**
      * Indicates symbolic links.
      */
