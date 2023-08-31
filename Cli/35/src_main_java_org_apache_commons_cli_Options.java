@@ -237,6 +237,9 @@ public class Options implements Serializable
         List<String> matchingOpts = new ArrayList<String>();
 
         // for a perfect match return the single option only
+        if(longOpts.keySet().contains(opt)) {
+            return Collections.singletonList(opt);
+        }
 
         for (String longOpt : longOpts.keySet())
         {
