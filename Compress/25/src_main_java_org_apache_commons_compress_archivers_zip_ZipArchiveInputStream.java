@@ -181,6 +181,7 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
         this.allowStoredEntriesWithDataDescriptor =
             allowStoredEntriesWithDataDescriptor;
         // haven't read anything so far
+        buf.limit(0);
     }
 
     public ZipArchiveEntry getNextZipEntry() throws IOException {
