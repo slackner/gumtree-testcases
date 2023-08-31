@@ -65,8 +65,12 @@ class RecordType extends PrototypeObjectType {
   private static final long serialVersionUID = 1L;
 
   private final SortedMap<String, JSType> properties = Maps.newTreeMap();
+  private final boolean declared;
   private boolean isFrozen = false;
 
+  RecordType(JSTypeRegistry registry, Map<String, RecordProperty> properties) {
+    this(registry, properties, true);
+  }
 
   /**
    * Creates a record type.
@@ -80,9 +84,11 @@ class RecordType extends PrototypeObjectType {
    * @throws IllegalStateException if the {@code RecordProperty} associated
    *         with a property is null.
    */
-  RecordType(JSTypeRegistry registry, Map<String, RecordProperty> properties) {
+  RecordType(JSTypeRegistry registry, Map<String, RecordProperty> properties,
+      boolean declared) {
     super(registry, null, null);
     setPrettyPrint(true);
+    this.declared = declared;
 
     for (String property : properties.keySet()) {
       RecordProperty prop = properties.get(property);
@@ -90,8 +96,13 @@ class RecordType extends PrototypeObjectType {
         throw new IllegalStateException(
             "RecordProperty associated with a property should not be null!");
       }
+      if (declared) {
         defineDeclaredProperty(
             property, prop.getType(), prop.getPropertyNode());
+      } else {
+        defineSynthesizedProperty(
+            property, prop.getType(), prop.getPropertyNode());
+      }
     }
 
     // Freeze the record type.
@@ -99,6 +110,9 @@ class RecordType extends PrototypeObjectType {
   }
 
   /** @return Is this synthesized for internal bookkeeping? */
+  boolean isSynthetic() {
+    return !declared;
+  }
 
   @Override
   public boolean isEquivalentTo(JSType other) {
@@ -149,6 +163,7 @@ class RecordType extends PrototypeObjectType {
     if (that.isRecordType()) {
       RecordType thatRecord = that.toMaybeRecordType();
       RecordTypeBuilder builder = new RecordTypeBuilder(registry);
+      builder.setSynthesized(true);
 
       // The greatest subtype consists of those *unique* properties of both
       // record types. If any property conflicts, then the NO_TYPE type
