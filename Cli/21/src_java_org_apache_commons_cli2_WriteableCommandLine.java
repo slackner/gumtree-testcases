@@ -99,6 +99,7 @@ public interface WriteableCommandLine extends CommandLine {
      *
      * @return the current option
      */
+    Option getCurrentOption();
 
     /**
      * Sets the current option. This method is called by concrete option
@@ -107,4 +108,5 @@ public interface WriteableCommandLine extends CommandLine {
      *
      * @param currentOption the new current option
      */
+    void setCurrentOption(Option currentOption);
 }
