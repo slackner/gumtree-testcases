@@ -122,8 +122,8 @@ public class Document extends Element {
 
         for (Node node: toMove) {
             element.removeChild(node);
-            body().appendChild(new TextNode(" ", ""));
-            body().appendChild(node);
+            body().prependChild(node);
+            body().prependChild(new TextNode(" ", ""));
         }
     }
 
