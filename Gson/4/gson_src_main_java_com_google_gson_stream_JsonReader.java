@@ -571,9 +571,6 @@ public class JsonReader implements Closeable {
       checkLenient();
       return peeked = PEEKED_SINGLE_QUOTED;
     case '"':
-      if (stackSize == 1) {
-        checkLenient();
-      }
       return peeked = PEEKED_DOUBLE_QUOTED;
     case '[':
       return peeked = PEEKED_BEGIN_ARRAY;
@@ -581,9 +578,6 @@ public class JsonReader implements Closeable {
       return peeked = PEEKED_BEGIN_OBJECT;
     default:
       pos--; // Don't consume the first character in a literal value.
-    }
-    if (stackSize == 1) {
-      checkLenient();
     }
 
     int result = peekKeyword();
