@@ -88,7 +88,8 @@ final class RemoveConstantExpressions implements CompilerPass {
 
       Node exprBody = node.getFirstChild();
       if (!NodeUtil.nodeTypeMayHaveSideEffects(exprBody)
-      ) {
+          || exprBody.getType() == Token.NEW
+          || exprBody.getType() == Token.CALL) {
         changeProxy.replaceWith(parent, node, getSideEffectNodes(exprBody));
       }
     }

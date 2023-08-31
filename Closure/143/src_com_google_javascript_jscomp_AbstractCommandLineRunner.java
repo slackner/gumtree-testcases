@@ -868,7 +868,8 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
           } else if (defValue.length() > 1
               && ((defValue.charAt(0) == '\'' &&
                   defValue.charAt(defValue.length() - 1) == '\'')
-            )) {
+                  || (defValue.charAt(0) == '\"' &&
+                      defValue.charAt(defValue.length() - 1) == '\"'))) {
             // If the value starts and ends with a single quote,
             // we assume that it's a string.
             String maybeStringVal =
