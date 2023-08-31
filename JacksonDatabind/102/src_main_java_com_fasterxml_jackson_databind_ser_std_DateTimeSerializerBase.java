@@ -64,9 +64,6 @@ public abstract class DateTimeSerializerBase<T>
     {
         // Note! Should not skip if `property` null since that'd skip check
         // for config overrides, in case of root value
-        if (property == null) {
-            return this;
-        }
         JsonFormat.Value format = findFormatOverrides(serializers, property, handledType());
         if (format == null) {
             return this;
