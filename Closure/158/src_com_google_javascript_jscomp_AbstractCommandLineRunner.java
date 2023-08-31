@@ -194,12 +194,11 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
       throws FlagUsageException, IOException {
     DiagnosticGroups diagnosticGroups = getDiagnosticGroups();
 
-    diagnosticGroups.setWarningLevels(
-        options, config.jscompError, CheckLevel.ERROR);
-    diagnosticGroups.setWarningLevels(
-        options, config.jscompWarning, CheckLevel.WARNING);
-    diagnosticGroups.setWarningLevels(
-        options, config.jscompOff, CheckLevel.OFF);
+    if (config.warningGuards != null) {
+      for (WarningGuardSpec.Entry entry : config.warningGuards.entries) {
+        diagnosticGroups.setWarningLevel(options, entry.groupName, entry.level);
+      }
+    }
 
     createDefineOrTweakReplacements(config.define, options, false);
 
@@ -1494,26 +1493,13 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
       return this;
     }
 
-    private final List<String> jscompError = Lists.newArrayList();
+    private WarningGuardSpec warningGuards = null;
 
     /**
      * Add warning guards.
      */
-    CommandLineConfig setJscompError(List<String> jscompError) {
-      this.jscompError.clear();
-      this.jscompError.addAll(jscompError);
-      return this;
-    }
-    private final List<String> jscompWarning = Lists.newArrayList();
-    CommandLineConfig setJscompWarning(List<String> jscompWarning) {
-      this.jscompWarning.clear();
-      this.jscompWarning.addAll(jscompWarning);
-      return this;
-    }
-    private final List<String> jscompOff = Lists.newArrayList();
-    CommandLineConfig setJscompOff(List<String> jscompOff) {
-      this.jscompOff.clear();
-      this.jscompOff.addAll(jscompOff);
+    CommandLineConfig setWarningGuardSpec(WarningGuardSpec spec) {
+      this.warningGuards = spec;
       return this;
     }
 
@@ -1625,9 +1611,26 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
    * A little helper class to make it easier to collect warning types
    * from --jscomp_error, --jscomp_warning, and --jscomp_off.
    */
+  protected static class WarningGuardSpec {
+    private static class Entry {
+      private final CheckLevel level;
+      private final String groupName;
 
+      private Entry(CheckLevel level, String groupName) {
+        this.level = level;
+        this.groupName = groupName;
+      }
+    }
 
     // The entries, in the order that they were added.
+    private final List<Entry> entries = Lists.newArrayList();
 
+    protected void add(CheckLevel level, String groupName) {
+      entries.add(new Entry(level, groupName));
+    }
 
+    protected void clear() {
+      entries.clear();
+    }
+  }
 }
