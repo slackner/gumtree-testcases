@@ -565,6 +565,9 @@ public class Scope
   /**
    * Return an iterable over all of the variables declared in this scope.
    */
+  Iterable<Var> getVarIterable() {
+    return vars.values();
+  }
 
   @Override
   public Iterable<Var> getReferences(Var var) {
