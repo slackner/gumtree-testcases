@@ -570,6 +570,12 @@ class PrototypeObjectType extends ObjectType {
     // properties on this object.
     if (constraint.isRecordType()) {
       matchRecordTypeConstraint(constraint.toObjectType());
+    } else if (constraint.isUnionType()) {
+      for (JSType alt : constraint.toMaybeUnionType().getAlternates()) {
+        if (alt.isRecordType()) {
+          matchRecordTypeConstraint(alt.toObjectType());
+        }
+      }
     }
   }
 
