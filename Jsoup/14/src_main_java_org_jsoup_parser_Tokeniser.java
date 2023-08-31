@@ -194,6 +194,9 @@ class Tokeniser {
         return tagPending.tagName.equals(lastStartTag.tagName);
     }
 
+    String appropriateEndTagName() {
+        return lastStartTag.tagName;
+    }
 
     boolean isTrackErrors() {
         return trackErrors;
