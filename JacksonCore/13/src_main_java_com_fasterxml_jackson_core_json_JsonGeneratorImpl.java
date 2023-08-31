@@ -124,6 +124,14 @@ public abstract class JsonGeneratorImpl extends GeneratorBase
         return this;
     }
 
+    @Override
+    public JsonGenerator disable(Feature f) {
+        super.disable(f);
+        if (f == Feature.QUOTE_FIELD_NAMES) {
+            _cfgUnqNames = true;
+        }
+        return this;
+    }
 
     @Override
     protected void _checkStdFeatureChanges(int newFeatureFlags, int changedFeatures) {
